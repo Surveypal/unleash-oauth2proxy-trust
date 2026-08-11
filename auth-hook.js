@@ -43,12 +43,8 @@ function trustedProxyAuthHook(app, config, services) {
 
   // Check only /api to allow the health check endpoint to be accessed without authentication
   app.use("/api", async (req, res, next) => {
-    console.log("DEBUG headers:", JSON.stringify(req.headers));
-    const authHeader = req.headers["authorization"];
-    const token =
-      authHeader && authHeader.startsWith("Bearer ")
-        ? authHeader.slice(7)
-        : null;
+    const rawHeader = req.headers["authorization"];
+    const token = rawHeader ? rawHeader.replace(/^Bearer\s+/i, "") : null;
 
     if (!token) {
       return res
