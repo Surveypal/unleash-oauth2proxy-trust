@@ -1,16 +1,5 @@
 "use strict";
 
-/**
- * Verifies the Azure AD ID token that oauth2-proxy forwards via the
- * Authorization header (requires oauth2-proxy configured with
- * --set-authorization-header=true).
- *
- * Env vars required:
- *  - AZURE_TENANT_ID
- *  - AZURE_CLIENT_ID   (must match the audience oauth2-proxy's Entra
- *                       app registration issues tokens for)
- */
-
 const jwt = require("jsonwebtoken");
 const jwksClient = require("jwks-rsa");
 
@@ -52,7 +41,8 @@ function verifyToken(token) {
 function trustedProxyAuthHook(app, config, services) {
   const { userService } = services;
 
-  app.use(async (req, res, next) => {
+  // Check only /api to allow the health check endpoint to be accessed without authentication
+  app.use("/api", async (req, res, next) => {
     const authHeader = req.headers["authorization"];
     const token =
       authHeader && authHeader.startsWith("Bearer ")
