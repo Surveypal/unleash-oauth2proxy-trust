@@ -1,0 +1,12 @@
+{
+  "name": "unleash-oauth2proxy-trust",
+  "description": "Unleash server verifying oauth2-proxy-forwarded Azure AD tokens",
+  "main": "index.js",
+  "engines": { "node": ">=22" },
+  "license": "ISC",
+  "dependencies": {
+    "unleash-server": "7.5.0",
+    "jsonwebtoken": "^9.0.2",
+    "jwks-rsa": "^3.1.0"
+  }
+}
