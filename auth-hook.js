@@ -43,6 +43,13 @@ function trustedProxyAuthHook(app, config, services) {
 
   // Check only /api to allow the health check endpoint to be accessed without authentication
   app.use("/api", async (req, res, next) => {
+    // Unleash has already authenticated API tokens (SDK clients) and personal
+    // access tokens before this hook runs and set req.user. They are not Azure
+    // AD JWTs, so let them through instead of failing jwt.verify below.
+    if (req.user) {
+      return next();
+    }
+
     const rawHeader = req.headers["authorization"];
     const token = rawHeader ? rawHeader.replace(/^Bearer\s+/i, "") : null;
 
